@@ -2,7 +2,7 @@ import logging
 import time
 from homeassistant.components.switch import SwitchDevice
 
-REQUIREMENTS = ['fritzconnection==0.6.5']
+REQUIREMENTS = ['fritzconnection==0.8.2']
 _LOGGER = logging.getLogger(__name__)
 
 
