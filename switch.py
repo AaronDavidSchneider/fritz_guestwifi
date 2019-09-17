@@ -40,14 +40,19 @@ class FritzBoxGuestWifi(SwitchDevice):
         self._name = "GuestWifi"
         self._state = None
         self._icon = "mdi:wifi"
+        self._should_poll = True
 
     @property
     def name(self):
         return self._name
-    
+
     @property
     def icon(self):
         return self._icon
+
+    @property
+    def should_poll(self):
+        return self._should_poll
 
     @property
     def is_on(self):
@@ -78,6 +83,9 @@ class FritzBoxGuestWifi(SwitchDevice):
         new_state = '1' if turn_on else '0'
         try:
             self._connection.call_action('WLANConfiguration:3', 'SetEnable', NewEnable=new_state)
+            self._should_poll = False
+            time.sleep(20)
+            self._should_poll = True
         except ServiceError or ActionError:
             _LOGGER.error('Home Assistant cannot call the wished service on the FRITZ!Box. '
                           'Are credentials, address and port correct?')
