@@ -23,3 +23,25 @@ switch:
 The fritzbox needs a few seconds to turn on the guest wifi. As home assistant pulls the new state of the guest wifi directly after a switch toggle, the switch goes back to its earlier position. I therefore set `scan_interval` to a reasonably low time to get the state pulled quickly.
 
 I use this switch together with the automatic disable setting in the fritzbox. It turns of the guest wifi if no one was connected for X minutes.
+
+### Example Automation:
+```
+automation:
+  - id: guestwifi_qr_notify
+    alias: send credentials of Guest Wifi to phone
+    trigger:
+      platform: state
+      entity_id: switch.guestwifi
+      to: "on"
+    action:
+    - service: notify.ios_aarons_iphone
+      data:
+        message: !secret guestwifi_password
+        title: "Guest Wifi --> on!"
+        data:
+          attachment:
+            url: "/local/QR-Guestwifi.png"
+            content-type: png
+            hide-thumbnail: false
+```
+Where I put the QR Code in a `www` folder in my config directory (see e.g. https://community.home-assistant.io/t/help-with-entity-picture-and-file-location/38547/2). 
