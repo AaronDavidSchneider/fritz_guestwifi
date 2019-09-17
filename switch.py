@@ -40,7 +40,7 @@ class FritzBoxGuestWifi(SwitchDevice):
         self._name = "GuestWifi"
         self._state = None
         self._icon = "mdi:wifi"
-        self._should_poll = True
+        self._update_timestamp = time.time()
 
     @property
     def name(self):
@@ -51,20 +51,18 @@ class FritzBoxGuestWifi(SwitchDevice):
         return self._icon
 
     @property
-    def should_poll(self):
-        return self._should_poll
-
-    @property
     def is_on(self):
         """Return true if light is on."""
         return self._state
 
     def turn_on(self, **kwargs):
         _LOGGER.info('Turning on guest wifi.')
+        self._update_timestamp = time.time()
         self._handle_turn_on_off(True)
 
     def turn_off(self, **kwargs):
         _LOGGER.info('Turning off guest wifi.')
+        self._update_timestamp = time.time()
         self._handle_turn_on_off(False)
 
     async def async_fetch_state(self):
@@ -76,16 +74,16 @@ class FritzBoxGuestWifi(SwitchDevice):
             _LOGGER.error('Could not get Guest Wifi state')
 
     async def async_update(self):
-        self._state = await self.async_fetch_state()
+        if time.time() < (self._update_timestamp + 60):
+            pass
+        else:
+            self._state = await self.async_fetch_state()
 
     def _handle_turn_on_off(self, turn_on):
         from fritzconnection.fritzconnection import ServiceError, ActionError
         new_state = '1' if turn_on else '0'
         try:
             self._connection.call_action('WLANConfiguration:3', 'SetEnable', NewEnable=new_state)
-            self._should_poll = False
-            time.sleep(20)
-            self._should_poll = True
         except ServiceError or ActionError:
             _LOGGER.error('Home Assistant cannot call the wished service on the FRITZ!Box. '
                           'Are credentials, address and port correct?')
