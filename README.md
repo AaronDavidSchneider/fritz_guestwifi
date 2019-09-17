@@ -3,6 +3,10 @@
 
 Fork of https://github.com/mammuth/ha-fritzbox-tools
 
+### Features:
+* turn on/off Guest Wifi in Home Assistant
+* senses external on/off of Guest Wifi
+
 ### Installation:
 put folder `fritz_guestwifi` (with files `__init__.py` and `switch.py`) to the `custom_components` folder in the `config` directory of your home assistant installation. Create `custom_components` if nescessary.
 
@@ -17,3 +21,5 @@ switch:
 ```
 
 The fritzbox needs a few seconds to turn on the guest wifi. As home assistant pulls the new state of the guest wifi directly after a switch toggle, the switch goes back to its earlier position. I therefore set `scan_interval` to a reasonably low time to get the state pulled quickly.
+
+I use this switch together with the automatic disable setting in the fritzbox. It turns of the guest wifi if no one was connected for X minutes.
