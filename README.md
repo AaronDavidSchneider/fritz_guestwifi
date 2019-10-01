@@ -1,7 +1,7 @@
 # Fritzbox Guestwifi Switch
 ## Custom component for use with Home Assistant
 
-Fork of https://github.com/mammuth/ha-fritzbox-tools
+outdated in favor of https://github.com/mammuth/ha-fritzbox-tools
 
 ### Features:
 * turn on/off Guest Wifi in Home Assistant
